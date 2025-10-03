@@ -47,6 +47,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "charms_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       direct_messages: {
@@ -88,6 +95,7 @@ export type Database = {
           charms: number
           charms_total: number | null
           created_at: string
+          display_name: string | null
           email: string
           fingerprint_enabled: boolean | null
           id: string
@@ -103,6 +111,7 @@ export type Database = {
           charms?: number
           charms_total?: number | null
           created_at?: string
+          display_name?: string | null
           email: string
           fingerprint_enabled?: boolean | null
           id?: string
@@ -118,6 +127,7 @@ export type Database = {
           charms?: number
           charms_total?: number | null
           created_at?: string
+          display_name?: string | null
           email?: string
           fingerprint_enabled?: boolean | null
           id?: string
@@ -159,6 +169,7 @@ export type Database = {
           id: string
           is_active: boolean
           joined_at: string
+          last_seen: string | null
           room_id: string
           user_id: string
         }
@@ -166,6 +177,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           joined_at?: string
+          last_seen?: string | null
           room_id: string
           user_id: string
         }
@@ -173,6 +185,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           joined_at?: string
+          last_seen?: string | null
           room_id?: string
           user_id?: string
         }
@@ -289,12 +302,73 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          charms: number | null
+          charms_total: number | null
+          created_at: string | null
+          display_name: string | null
+          id: string | null
+          last_active_at: string | null
+          level: number | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          charms?: number | null
+          charms_total?: number | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          last_active_at?: string | null
+          level?: number | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          charms?: number | null
+          charms_total?: number | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string | null
+          last_active_at?: string | null
+          level?: number | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       generate_room_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_user_by_username: {
+        Args: { username_input: string }
+        Returns: {
+          avatar_url: string
+          charms_total: number
+          display_name: string
+          level: number
+          user_id: string
+          username: string
+        }[]
+      }
+      get_user_by_username_or_email: {
+        Args: { input_text: string }
+        Returns: {
+          email: string
+          user_id: string
+          username: string
+        }[]
+      }
+      is_room_member: {
+        Args: { room_id_param: string; user_id_param: string }
+        Returns: boolean
       }
     }
     Enums: {
